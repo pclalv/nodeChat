@@ -1,0 +1,24 @@
+{
+  "name": "chatApp",
+  "version": "1.0.0",
+  "description": "a chat app built in node.js with websockets/socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/pclalv/nodeChat.git"
+  },
+  "author": "paul alvarez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pclalv/nodeChat/issues"
+  },
+  "homepage": "https://github.com/pclalv/nodeChat",
+  "dependencies": {
+    "socket.io": "1.3.x",
+    "mime": "~1.2.7",
+    "node-static": "^0.7.4"
+  }
+}

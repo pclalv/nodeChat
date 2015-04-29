@@ -1,12 +1,14 @@
 (function () {
-  function ChatUi (el) {
-    var my = this;
+  function ChatUi (options) {
+    var my = this
+        $el = $(options.el);
 
-    this.$input = $(el).find(".message-input");
-    this.$display = $(el).find(".messages");
-    this.chat = new Chat({ socket: io() });
+    this.$form = $el.find(".message-form");
+    this.$input = $el.find(".message-input")
+    this.$display = $el.find(".messages");
+    this.chat = new Chat({ socket: options.socket });
 
-    this.$input.submit(function (event) {
+    this.$form.submit(function (event) {
       event.preventDefault();
       my.handleInput();
     });
@@ -15,11 +17,16 @@
   ChatUi.prototype.handleInput = function (event) {
     this.getMessage()
       .sendMessage()
-      .displayMessage();
+      .clearInput();
   };
 
+  ChatUi.prototype.receiveMessage = function (msg) {
+    this.msg = msg;
+    this.displayMessage();
+  }
+
   ChatUi.prototype.getMessage = function () {
-    this.msg = this.$input.text();
+    this.msg = this.$input.val();
     return this;
   };
 
@@ -29,14 +36,26 @@
   };
 
   ChatUi.prototype.displayMessage = function () {
-    debugger
-    var $msg = $('li').text(this.msg);
+    var $msg = $('<li>').text(this.msg);
 
     this.$display.prepend($msg);
     this.msg = undefined;
+    return this;
+  };
+
+  ChatUi.prototype.clearInput = function () {
+    this.$input.val("");
   };
 
   $(function () {
-    new ChatUi($("#nodechat"));
+    var socket = io(),
+        chatUi = new ChatUi({
+          el: $("#nodechat"),
+          socket: socket
+        });
+
+    socket.on("receivedMessage", function (msg) {
+      chatUi.receiveMessage(msg);
+    });
   });
 })();

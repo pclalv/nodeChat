@@ -4,6 +4,11 @@
   };
 
   Chat.prototype.sendMessage = function (msg) {
-    this.socket.emit("sentMesssage", msg);
+    console.log("emitting msg");
+    this.socket.emit("sentMessage", msg);
   };
+
+  Chat.prototype.displayMessage = function (msg) {
+
+  }
 })();

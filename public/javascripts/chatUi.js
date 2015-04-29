@@ -25,19 +25,7 @@
         matchData = this.$input.val().match(/^\/([A-z]+)\s(\w+)/);
 
     if (matchData) {
-      command = matchData[1];
-      args = matchData[2];
-
-      switch (command) {
-        case "nick":
-          this.requestNickChange(args)
-            .clearInput();
-          break;
-        default:
-          this.displayCommandError(command)
-            .clearInput();
-          break;
-      }
+      this.processCommand(matchData);
     } else {
       this.getMessage()
         .sendMessage()
@@ -82,7 +70,23 @@
   };
 
   ChatUi.prototype.displayNickChange = function (nickData) {
-    this.write(nickData.oldNick + " has changes their nick to " + nickData.newNick + ".");
+    this.write(nickData.oldNick + " has changed their nick to " + nickData.newNick + ".");
+  };
+
+  ChatUi.prototype.processCommand = function (input) {
+    var command = input[1],
+        args = input[2];
+
+    switch (command) {
+      case "nick":
+        this.requestNickChange(args)
+          .clearInput();
+        break;
+      default:
+        this.displayCommandError(command)
+          .clearInput();
+        break;
+    }
   };
 
   ChatUi.prototype.displayCommandError = function (command) {

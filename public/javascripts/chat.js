@@ -11,9 +11,9 @@
   Chat.prototype.requestNickChange = function (newNick) {
     console.log("req nick change");
     this.socket.emit("nicknameChangeRequest", newNick);
-  }
+  };
 
   Chat.prototype.handleNickChangeResponse = function (response) {
     this.socket.emit("newNick", response)
-  }
+  };
 })();

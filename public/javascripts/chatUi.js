@@ -4,8 +4,9 @@
         $el = $(options.el);
 
     this.$form = $el.find(".message-form");
-    this.$input = $el.find(".message-input")
+    this.$input = $el.find(".message-input");
     this.$display = $el.find(".messages");
+    this.$rooms = $el.find(".rooms");
     this.chat = new Chat({ socket: options.socket });
 
     this.$form.submit(function (event) {
@@ -54,6 +55,7 @@
 
     switch (command) {
       case "nick":
+        debugger
         this.requestNickChange(arg)
           .clearInput();
         break;
@@ -97,6 +99,7 @@
 
   ChatUi.prototype.displayNickChange = function (data) {
     this.write(data.oldNick + " has changed their nick to " + data.newNick + ".");
+    debugger
     this.updateUsersList(data.updatedUsers);
   };
 
@@ -110,12 +113,30 @@
     this.chat.handleRoomChange(room);
   };
 
-  ChatUi.prototype.updateUsersList = function (usersList) {
-    var $user;
+  ChatUi.prototype.updateUsersList = function (usersByRoom) {
+    debugger
+    var room, roomUsers, $roomUsers, user, $user;
 
-    usersList.forEach(function (user) {
-      $user = $("<li class=\"user\">").text(u)
-    })
+    this.$rooms.empty();
+
+    for (room in usersByRoom) {
+      roomUsers = usersByRoom[room];
+      if (Object.keys(roomUsers).length !== 0) {
+        this.addRoomToList(room);
+        $roomUsers = this.$rooms.find("#" + room + " > .users");
+        for (socketId in roomUsers) {
+          $user = $("<li class=\"user\">").text(roomUsers[socketId]);
+          $roomUsers.append($user);
+        }
+      }
+    }
+  };
+
+  ChatUi.prototype.addRoomToList = function (room) {
+    var $room = $("<li class=\"room\" id=\"" + room + "\">")
+      .append("<h2>" + room + "</h2>")
+      .append("<ul class=\"users\"><ul>");
+    this.$rooms.append($room);
   };
 
   $(function () {
@@ -125,7 +146,6 @@
           el: $("#nodechat")
         });
 
-    // i'd like to implement these differently; seems invasive as is
     socket.on("receivedMessage", function (messageData) {
       chatUi.displayMessage(messageData);
     });

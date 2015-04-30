@@ -55,7 +55,6 @@
 
     switch (command) {
       case "nick":
-        debugger
         this.requestNickChange(arg)
           .clearInput();
         break;
@@ -99,7 +98,6 @@
 
   ChatUi.prototype.displayNickChange = function (data) {
     this.write(data.oldNick + " has changed their nick to " + data.newNick + ".");
-    debugger
     this.updateUsersList(data.updatedUsers);
   };
 
@@ -114,7 +112,6 @@
   };
 
   ChatUi.prototype.updateUsersList = function (usersByRoom) {
-    debugger
     var room, roomUsers, $roomUsers, user, $user;
 
     this.$rooms.empty();
@@ -162,8 +159,9 @@
       chatUi.displayNickChange(nickData);
     });
 
-    socket.on("changeRoom", function (room) {
-      chatUi.handleRoomChange(room);
+    socket.on("changeRoom", function (data) {
+      chatUi.handleRoomChange(data.room);
+      chatUi.updateUsersList(data.updatedUsers);
     })
   });
 })();

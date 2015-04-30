@@ -159,9 +159,12 @@
       chatUi.displayNickChange(nickData);
     });
 
-    socket.on("changeRoom", function (data) {
-      chatUi.handleRoomChange(data.room);
-      chatUi.updateUsersList(data.updatedUsers);
-    })
+    socket.on("joinRoom", function (room) {
+      chatUi.handleRoomChange(room);
+    });
+
+    socket.on("updateUsers", function (updatedUsers) {
+      chatUi.updateUsersList(updatedUsers);
+    });
   });
 })();

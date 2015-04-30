@@ -95,8 +95,9 @@
     }
   };
 
-  ChatUi.prototype.displayNickChange = function (nickData) {
-    this.write(nickData.oldNick + " has changed their nick to " + nickData.newNick + ".");
+  ChatUi.prototype.displayNickChange = function (data) {
+    this.write(data.oldNick + " has changed their nick to " + data.newNick + ".");
+    this.updateUsersList(data.updatedUsers);
   };
 
   ChatUi.prototype.requestRoomChange = function (room) {
@@ -107,6 +108,14 @@
   ChatUi.prototype.handleRoomChange = function (room) {
     this.write("Joined \"" + room + "\"");
     this.chat.handleRoomChange(room);
+  };
+
+  ChatUi.prototype.updateUsersList = function (usersList) {
+    var $user;
+
+    usersList.forEach(function (user) {
+      $user = $("<li class=\"user\">").text(u)
+    })
   };
 
   $(function () {

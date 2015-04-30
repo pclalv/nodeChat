@@ -10,9 +10,7 @@
   };
 
   Chat.prototype.requestNickChange = function (newNick) {
-    this.socket.emit("nicknameChangeRequest", {
-      newNick: newNick,
-      room: this._room });
+    this.socket.emit("nicknameChangeRequest", newNick);
   };
 
   Chat.prototype.handleNickChangeResponse = function (response) {

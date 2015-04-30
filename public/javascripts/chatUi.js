@@ -96,7 +96,6 @@
   };
 
   ChatUi.prototype.displayNickChange = function (nickData) {
-    debugger
     this.write(nickData.oldNick + " has changed their nick to " + nickData.newNick + ".");
   };
 
@@ -106,6 +105,7 @@
   };
 
   ChatUi.prototype.handleRoomChange = function (room) {
+    this.write("Joined \"" + room + "\"");
     this.chat.handleRoomChange(room);
   };
 

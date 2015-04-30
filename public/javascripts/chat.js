@@ -21,7 +21,7 @@
   };
 
   Chat.prototype.requestRoomChange = function (room) {
-    this.socket.emit("roomChangeRequest", roo);
+    this.socket.emit("roomChangeRequest", room);
   };
 
   Chat.prototype.handleRoomChange = function (room) {

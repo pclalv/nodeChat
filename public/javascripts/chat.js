@@ -4,16 +4,27 @@
   };
 
   Chat.prototype.sendMessage = function (msg) {
-    console.log("emitting msg");
-    this.socket.emit("sentMessage", msg);
+    this.socket.emit("sentMessage", {
+      msg: msg,
+      room: this._room });
   };
 
   Chat.prototype.requestNickChange = function (newNick) {
-    console.log("req nick change");
-    this.socket.emit("nicknameChangeRequest", newNick);
+    this.socket.emit("nicknameChangeRequest", {
+      newNick: newNick,
+      room: this._room });
   };
 
   Chat.prototype.handleNickChangeResponse = function (response) {
+    response.room = this._room;
     this.socket.emit("newNick", response)
   };
+
+  Chat.prototype.requestRoomChange = function (room) {
+    this.socket.emit("roomChangeRequest", roo);
+  };
+
+  Chat.prototype.handleRoomChange = function (room) {
+    this._room = room;
+  }
 })();

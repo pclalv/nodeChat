@@ -22,7 +22,7 @@
 
   ChatUi.prototype.handleInput = function () {
     var command, args,
-        matchData = this.$input.val().match(/^\/([A-z]+)\s(\w+)/);
+        matchData = this.$input.val().match(/^\/([A-z]+)\s*(\w*)/);
 
     if (matchData) {
       this.processCommand(matchData);
@@ -48,6 +48,32 @@
     this.msg = undefined;
   };
 
+  ChatUi.prototype.processCommand = function (input) {
+    var command = input[1],
+        arg = input[2];
+
+    switch (command) {
+      case "nick":
+        this.requestNickChange(arg)
+          .clearInput();
+        break;
+      case "join":
+        this.requestRoomChange(arg)
+          .clearInput();
+        break;
+      default:
+        this.displayCommandError(command)
+          .clearInput();
+        break;
+    }
+  };
+
+  ChatUi.prototype.displayCommandError = function (command) {
+    this.write("\"" + command + "\" is not a valid command.");
+    return this;
+  };
+
+
   ChatUi.prototype.clearInput = function () {
     this.$input.val("");
   };
@@ -70,28 +96,17 @@
   };
 
   ChatUi.prototype.displayNickChange = function (nickData) {
+    debugger
     this.write(nickData.oldNick + " has changed their nick to " + nickData.newNick + ".");
   };
 
-  ChatUi.prototype.processCommand = function (input) {
-    var command = input[1],
-        args = input[2];
-
-    switch (command) {
-      case "nick":
-        this.requestNickChange(args)
-          .clearInput();
-        break;
-      default:
-        this.displayCommandError(command)
-          .clearInput();
-        break;
-    }
+  ChatUi.prototype.requestRoomChange = function (room) {
+    this.chat.requestRoomChange(room);
+    return this;
   };
 
-  ChatUi.prototype.displayCommandError = function (command) {
-    this.write("\"" + command + "\" is not a valid command.");
-    return this;
+  ChatUi.prototype.handleRoomChange = function (room) {
+    this.chat.handleRoomChange(room);
   };
 
   $(function () {
@@ -116,6 +131,10 @@
 
     socket.on("changedNick", function (nickData) {
       chatUi.displayNickChange(nickData);
+    });
+
+    socket.on("changeRoom", function (room) {
+      chatUi.handleRoomChange(room);
     })
   });
 })();
